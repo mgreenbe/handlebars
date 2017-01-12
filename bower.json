@@ -1,0 +1,23 @@
+{
+  "name": "handlebars",
+  "authors": [
+    "fmgreenberg <fmgreenberg@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "handlebars": "^4.0.5",
+    "bootstrap": "^3.3.7",
+    "codemirror": "^5.22.2",
+    "juicy-ace-editor": "^1.2.2"
+  }
+}
