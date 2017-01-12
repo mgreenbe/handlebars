@@ -18,6 +18,8 @@
     "handlebars": "^4.0.5",
     "bootstrap": "^3.3.7",
     "codemirror": "^5.22.2",
-    "juicy-ace-editor": "^1.2.2"
+    "juicy-ace-editor": "^1.2.2",
+    "polymer": "polymer/polymer#^1.7.1",
+    "iron-elements": "polymerelements/iron-elements#^1.0.10"
   }
 }

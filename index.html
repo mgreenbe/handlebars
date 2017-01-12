@@ -13,31 +13,72 @@
     <script src="./bower_components/handlebars/handlebars.min.js"></script>
     <!-- juicy-ace-editor -->
     <link rel="import" href="./bower_components/juicy-ace-editor/juicy-ace-editor.html">
+    <!-- Polymer -->
+    <link rel="import" href="./bower_components/polymer/polymer.html">
+    <!-- app element -->
+    <link rel="import" href="app-root.html">
+
+    <style>
+      body {
+        margin: 20px;
+      }
+      .editor {
+        /*width: 500px;*/
+        height: 250px;
+        padding: 10px;
+      }
+      .editor-container {
+        /*width: 520px;*/
+        height: 270px;
+        background: white;
+        border-style: solid;
+        border-width: 1px;
+        margin-bottom: 20px;
+      }
+    </style>
+
   </head>
   <body>
-     <textarea id="editor" rows="10" cols="60"></textarea>
 
-    <button id="compile-button">Compile</button>
+    <app-root></app-root>
+
+  <template is="dom-repeat" items='[1, 2, 3]'>
+    Index: [[index]]
+  </template>
+
+    <div class="editor-container">
+      <juicy-ace-editor 
+        id="editor"
+        class="editor"
+        theme="ace/theme/chrome"
+        fontsize="16"
+        mode="ace/mode/handlebars">&lt;div&#32;class=&quot;entry&quot;&gt;&#13;&#10;&#32;&#32;&lt;h1&gt;{{title}}&lt;/h1&gt;&#13;&#10;&#32;&#32;&lt;div&#32;class=&quot;body&quot;&gt;&#13;&#10;&#32;&#32;&#32;&#32;{{body}}&#13;&#10;&#32;&#32;&lt;/div&gt;&#13;&#10;&lt;/div&gt;</juicy-ace-editor>
+    </div>
+
 
     <div id="preview"></div>
 
-    <juicy-ace-editor theme="ace/theme/monokai">Type your code here...</juicy-ace-editor>
+    <div class="editor-container">
+      <juicy-ace-editor 
+        id="model-editor"
+        class="editor"
+        theme="ace/theme/chrome"
+        fontsize="16"
+        mode="ace/mode/json">{"title": "Preview", "body": "How did I get here?"}</juicy-ace-editor>
+    </div>
+
+    <button id="compile-button">Compile</button>
 
     <script>
-      const placeholder = `<div class="entry">
-  <h1>{{title}}</h1>
-  <div class="body">
-    {{body}}
-  </div>
-</div>`
       const editor = document.getElementById("editor");
-      editor.value = placeholder;
+      const modelEditor = document.getElementById("model-editor");
       const compileButton = document.getElementById("compile-button");
       const preview = document.getElementById("preview");
 
       compileButton.addEventListener('click', () => {
         const template = Handlebars.compile(editor.value);
-        const context = {title: "My New Post", body: "This is my first post!"};
+        const context = JSON.parse(modelEditor.value);
+        // const context = {title: "My New Post", body: "This is my first post!"};
         const html = template(context);
         preview.innerHTML = html;
       });
