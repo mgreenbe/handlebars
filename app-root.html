@@ -1,21 +1,63 @@
-<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="./bower_components/juicy-ace-editor/juicy-ace-editor.html">
+<link rel="import" href="./bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="./bower_components/ace-widget/ace-widget.html">
+
+<script>
+  const placeholders = {
+    template: `<div class="entry">
+  <h1>{{title}}</h1>
+  <div class="body">
+    {{body}}
+  </div>
+</div>`,
+    model: `{
+  title: "Important!",
+  body: "The template has been hydrated!"
+}`
+  };
+</script>
 
 <dom-module id="app-root">
-    <template>
-        <style include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning">
-            :host {
-                display: block;
-            }
-        </style>
-        <div id="container" class="layout horizontal">
-            <div class="flex">One</div>
-            <div class="flex">Two</div>
+  <template>
+    <style include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning">
+        :host {
+            display: block;
+        }
+    </style>
+    <div id="container" class="layout horizontal">
+      <div class="flex">
+        <div class="editor-container">
+          <ace-widget 
+            id="editor"
+            class="editor"
+            theme="ace/theme/chrome"
+            fontsize="16"
+            placeholder="template"
+            on-editor-ready="placeholder"
+            mode="ace/mode/handlebars">Hi</ace-widget>
         </div>
-    </template>
+        <div class="editor-container">
+          <ace-widget 
+            id="hello"
+            class="editor"
+            theme="ace/theme/chrome"
+            fontsize="16"
+            placeholder="model"
+            on-editor-ready="placeholder"
+            mode="ace/mode/json"></ace-widget>
+        </div>
+      </div> <!-- editor column -->
+      <div id="preview" class="flex">Two</div>
+    </div>
+  </template>
     <script>
-        Polymer({
-            is: 'app-root'
-        });
+      Polymer({
+        is: 'app-root',
+        placeholder: function(e) {
+          const editor = e.target;
+          editor.value = placeholders[editor.placeholder];
+        },
+      });
     </script>
 </dom-module>
 
