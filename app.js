@@ -1,14 +1,16 @@
-const templatePlaceholder = `<div class="entry">
-  <h1>{{title}}</h1>
-  <div class="body">
-    {{body}}
-  </div>
-</div>
-<button class="my-button">Click</button>`
+const templatePlaceholder = `<ul class="people_list">
+  {{#each people}}
+    <li>{{this}}</li>
+  {{/each}}
+</ul>
+<button class="my-button" data-action="">Click</button>`
 
 const modelPlaceholder = `{
-  "title": "Title",
-  "body": "Body"
+  "people": [
+    "Yehuda Katz",
+    "Alan Johnson",
+    "Charles Jolley"
+  ]
 }`;
 
 const templateEditor = ace.edit("template-editor");
@@ -27,15 +29,26 @@ modelEditor.getSession().setMode("ace/mode/json");
  
 const compileButton = document.getElementById("compile-button");
 const preview = document.getElementById("preview");
+preview.template = "TeMpLaTe";
+console.log(preview.getAttribute("dataAction") == undefined);
+
+let context;
 
 compileButton.addEventListener('click', () => {
   const template = Handlebars.compile(templateEditor.getValue());
-  const context = JSON.parse(modelEditor.getValue());
+  context = JSON.parse(modelEditor.getValue());
   const html = template(context);
   preview.innerHTML = html;
 });
 
-preview.addEventListener("click", (e) => console.log(e.target.className));
+const handleClick = function(e) {
+  context.people.push("Matthew Greenberg");
+  const template = Handlebars.compile(templateEditor.getValue());
+  const html = template(context);
+  preview.innerHTML = html;
+}
+
+preview.addEventListener("click", handleClick);
 
 const appRoot = document.getElementById("app-root");
 
