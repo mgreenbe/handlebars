@@ -11,12 +11,10 @@
     <link href="./bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Handlebars -->
     <script src="./bower_components/handlebars/handlebars.min.js"></script>
+    <!-- ace-editor -->
+    <script src="./bower_components/ace-builds/src-noconflict/ace.js"></script>
     <!-- juicy-ace-editor -->
     <link rel="import" href="./bower_components/juicy-ace-editor/juicy-ace-editor.html">
-    <!-- Polymer -->
-    <link rel="import" href="./bower_components/polymer/polymer.html">
-    <!-- app element -->
-    <link rel="import" href="app-root.html">
 
     <style>
       body {
@@ -30,63 +28,35 @@
       .editor-container {
         /*width: 520px;*/
         height: 270px;
-        background: white;
-        border-style: solid;
+        /*border-style: solid;*/
         border-width: 1px;
         margin-bottom: 20px;
       }
     </style>
 
   </head>
-  <body>
+  <body id="app-root">
 
-    <app-root></app-root>
-
-  <template is="dom-repeat" items='[1, 2, 3]'>
-    Index: [[index]]
-  </template>
-
-    <div class="editor-container">
-      <juicy-ace-editor 
-        id="editor"
-        class="editor"
-        theme="ace/theme/chrome"
-        fontsize="16"
-        mode="ace/mode/handlebars">&lt;div&#32;class=&quot;entry&quot;&gt;&#13;&#10;&#32;&#32;&lt;h1&gt;{{title}}&lt;/h1&gt;&#13;&#10;&#32;&#32;&lt;div&#32;class=&quot;body&quot;&gt;&#13;&#10;&#32;&#32;&#32;&#32;{{body}}&#13;&#10;&#32;&#32;&lt;/div&gt;&#13;&#10;&lt;/div&gt;</juicy-ace-editor>
+    <div class="row">
+      <div class="col-md-7">
+        <div style="border-style: solid; border-width: 1px; padding: 10px; margin-bottom: 10px;">
+            <div id="template-editor" class="editor-container" style="font-size: 14px"></div>
+        </div>
+        <div style="border-style: solid; border-width: 1px; padding: 10px; margin-bottom: 10px;">
+            <div id="model-editor" class="editor-container" style="font-size: 14px;"></div>
+        </div>
+        <button id="compile-button">Compile</button>
+      </div>
+      <div class="col-md-5">
+        <div id="preview"></div>
+      </div>
     </div>
-
-
-    <div id="preview"></div>
-
-    <div class="editor-container">
-      <juicy-ace-editor 
-        id="model-editor"
-        class="editor"
-        theme="ace/theme/chrome"
-        fontsize="16"
-        mode="ace/mode/json">{"title": "Preview", "body": "How did I get here?"}</juicy-ace-editor>
-    </div>
-
-    <button id="compile-button">Compile</button>
-
-    <script>
-      const editor = document.getElementById("editor");
-      const modelEditor = document.getElementById("model-editor");
-      const compileButton = document.getElementById("compile-button");
-      const preview = document.getElementById("preview");
-
-      compileButton.addEventListener('click', () => {
-        const template = Handlebars.compile(editor.value);
-        const context = JSON.parse(modelEditor.value);
-        // const context = {title: "My New Post", body: "This is my first post!"};
-        const html = template(context);
-        preview.innerHTML = html;
-      });
-    </script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="./bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="./app.js"></script>
   </body>
 </html>
