@@ -1,0 +1,3 @@
+- set focus after add/remove
+- split code into modules, incorporate webpack
+- combine data-action and data-path into data-action="ACTION arg1 arg2 ..."
