@@ -1,16 +1,25 @@
-const templatePlaceholder = `<ul class="people_list">
-  {{#each people}}
-    <li>{{this}}</li>
-  {{/each}}
-</ul>
-<button class="my-button" data-action="">Click</button>`
+const templatePlaceholder = `{{#each people}}
+    <p><label>Name:</label><input class="form-control" value="{{name}}" data-path="people[{{@index}}].name"></p>
+    <label>Kids:</label>
+    {{#each kids}}
+        <input class="form-control" value="{{this}}" data-path="people[{{@../index}}].kids[{{@index}}]">
+        {{/each}}
+    <button class="btn btn-default" data-action="ADD" data-path="people[{{@index}}].kids">Add kid</button>
+    <br><br>
+{{/each}}
+<button class="btn btn-default" data-action="ADD" data-path="people">Add person</button>`
 
 const modelPlaceholder = `{
-  "people": [
-    "Yehuda Katz",
-    "Alan Johnson",
-    "Charles Jolley"
-  ]
+    "people": [
+        {
+            "name": "Matt",
+            "kids": ["Max", "Enna"]
+        },
+        {
+            "name": "Erik",
+            "kids": ["Bjorn", "Soren"]
+        }
+    ]
 }`;
 
 const templateEditor = ace.edit("template-editor");
@@ -30,7 +39,6 @@ modelEditor.getSession().setMode("ace/mode/json");
 const compileButton = document.getElementById("compile-button");
 const preview = document.getElementById("preview");
 preview.template = "TeMpLaTe";
-console.log(preview.getAttribute("dataAction") == undefined);
 
 let context;
 
@@ -41,15 +49,32 @@ compileButton.addEventListener('click', () => {
   preview.innerHTML = html;
 });
 
+// const handleClick = function(e) {
+//   context.people.push("Matthew Greenberg");
+//   const template = Handlebars.compile(templateEditor.getValue());
+//   const html = template(context);
+//   preview.innerHTML = html;
+// }
+
+const handleInput = function(e) {
+  _.set(context, e.target.dataset.path, e.target.value);
+  console.log(`context: ${JSON.stringify(context)}`);
+}
+
+preview.addEventListener("input", handleInput);
+
 const handleClick = function(e) {
-  context.people.push("Matthew Greenberg");
-  const template = Handlebars.compile(templateEditor.getValue());
-  const html = template(context);
-  preview.innerHTML = html;
+  if (e.target.hasAttribute("data-path") && e.target.hasAttribute("data-action")) {
+    const path = e.target.dataset.path;
+    let array = _.get(context, path);
+    if (!Array.isArray(array)) {
+      array = _.get(_.set(context, path, []), path);
+    }
+    array.push(null);
+    const template = Handlebars.compile(templateEditor.getValue());
+    const html = template(context);
+    preview.innerHTML = html;
+  }
 }
 
 preview.addEventListener("click", handleClick);
-
-const appRoot = document.getElementById("app-root");
-
-console.log(appRoot);
