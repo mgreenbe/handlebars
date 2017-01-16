@@ -29,34 +29,49 @@ const modelPlaceholder = `{
     ]
 }`;
 
-const templateEditor = ace.edit("template-editor");
-templateEditor.$blockScrolling = Infinity;
-templateEditor.setValue(templatePlaceholder);
-templateEditor.clearSelection();
-templateEditor.setTheme("ace/theme/chrome");
-templateEditor.getSession().setMode("ace/mode/handlebars");
+const initializeEditor = function(id, value, theme, mode) {
+  const editor = ace.edit(id);
+  editor.$blockScrolling = Infinity;
+  editor.setValue(value);
+  editor.clearSelection();
+  editor.setTheme(`ace/theme/${theme}`);
+  editor.getSession().setMode(`ace/mode/${mode}`);
+  return editor;
+}
+
+const templateEditor = initializeEditor("template-editor", templatePlaceholder, "chrome", "handlebars");
+const modelEditor = initializeEditor("model-editor", modelPlaceholder, "chrome", "json");
+
+// const templateEditor = ace.edit("template-editor");
+// templateEditor.$blockScrolling = Infinity;
+// templateEditor.setValue(templatePlaceholder);
+// templateEditor.clearSelection();
+// templateEditor.setTheme("ace/theme/chrome");
+// templateEditor.getSession().setMode("ace/mode/handlebars");
  
-const modelEditor = ace.edit("model-editor");
-modelEditor.$blockScrolling = Infinity;
-modelEditor.setValue(modelPlaceholder);
-modelEditor.clearSelection();
-modelEditor.setTheme("ace/theme/chrome");
-modelEditor.getSession().setMode("ace/mode/json");
+// const modelEditor = ace.edit("model-editor");
+// modelEditor.$blockScrolling = Infinity;
+// modelEditor.setValue(modelPlaceholder);
+// modelEditor.clearSelection();
+// modelEditor.setTheme("ace/theme/chrome");
+// modelEditor.getSession().setMode("ace/mode/json");
  
 const compileButton = document.getElementById("compile-button");
 const preview = document.getElementById("preview");
-preview.template = "TeMpLaTe";
 
 const ancestor = (elt, stop, test) => test(elt) ? elt :
   (elt == stop) ? null : ancestor(elt.parentElement, stop, test);
 
-let context;
+let context, template;
+
+const render = function(template, context) {
+  this.innerHTML = template(context);
+}
 
 compileButton.addEventListener('click', () => {
-  const template = Handlebars.compile(templateEditor.getValue());
   context = JSON.parse(modelEditor.getValue());
-  const html = template(context);
-  preview.innerHTML = html;
+  template = Handlebars.compile(templateEditor.getValue());
+  return render.bind(preview)(template, context);
 });
 
 const handleInput = function(e) {
